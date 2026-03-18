@@ -62,6 +62,36 @@ If **build fails** (timeout / LFS): use **Path A** so Vercel clones from GitHub;
 
 ---
 
+## Fix: “Login Connection to GitHub” / failed to link repo (CLI)
+
+Vercel must **connect your GitHub account** before the CLI can attach a project to `thedetailclinic-gif/Website`.
+
+1. Open **[vercel.com/account/authentication](https://vercel.com/account/authentication)** (or **Dashboard → your profile (bottom left) → Settings → Authentication**).
+2. Under **Login Connections** / **GitHub**, click **Connect** and approve access.
+3. Optionally **[vercel.com/account/integrations](https://vercel.com/account/integrations)** → ensure the **Vercel** GitHub App can access the **Website** repo.
+
+**Workaround without linking Git in CLI:** When `vercel link` asks to connect the GitHub repository, answer **N** — deployment from CLI still works; you just won’t get auto-deploy on push until you use **Path A**.
+
+---
+
+## Fix: `npm install` exited with 1
+
+1. Open the failed deployment → **Building** log and scroll to the **first red `npm ERR!` lines** (that’s the real error).
+2. **Redeploy** with **“Clear cache and redeploy”** (⋮ on the deployment).
+3. **Project → Settings → General → Node.js Version** → set **22.x** (or **20.x**), save, redeploy.
+
+This repo now pins install via **`vercel.json`** (`npm ci`) and **`engines.node`** so Vercel uses a current Node.
+
+**Large uploads:** CLI `vercel --prod` can upload **hundreds of MB** (videos in `public/`). That can stress build disk. Prefer **Path A (import from GitHub)** so the build runs on Vercel’s side without your Mac uploading the whole tree.
+
+---
+
+## Vercel project name rules
+
+Names must be **lowercase** (e.g. `detail-clinic`), not `Thedetailclininic`.
+
+---
+
 ## Commit `.vercelignore` (optional but good)
 
 ```bash
