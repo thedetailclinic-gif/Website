@@ -1,0 +1,21 @@
+node_modules/
+.env
+.env.local
+.env*.local
+.next
+dist
+build
+*.log
+
+# Large local-only assets (do not push to GitHub)
+Pictures/
+*.mov
+Documents Edits/
+
+# Dev/tooling folders not needed for the live site
+nano-banana-2/
+stitch-mcp-repo/
+.cursor/
+
+.DS_Store
+.vercel/
