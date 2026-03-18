@@ -2,6 +2,10 @@
 
 Your app needs **`AN_API_KEY`** on Vercel (same value as local `.env`).
 
+**Automated Linux build:** every push runs **GitHub Actions** (`.github/workflows/ci-build.yml`). Check the **Actions** tab on GitHub — green = same steps Vercel uses will likely pass.
+
+**Deploy from GitHub without Vercel’s Git connect:** see **`VERCEL-GITHUB-ACTIONS.md`** (optional `VERCEL_*` secrets).
+
 ---
 
 ## Path A — Connect GitHub (auto-deploy on every push) — **recommended**

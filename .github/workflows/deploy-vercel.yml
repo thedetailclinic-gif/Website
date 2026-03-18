@@ -1,0 +1,45 @@
+# Optional: push-to-Vercel without using Vercel’s Git UI. Add secrets per VERCEL-GITHUB-ACTIONS.md
+name: Deploy — Vercel (optional)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Strip heavy folders (Next only needs public/)
+        run: |
+          rm -rf Pictures
+          rm -f "Detail Clinic Website 2.0.mov" || true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install & build
+        run: npm ci && npm run build
+        env:
+          AN_API_KEY: placeholder-ci-not-used-in-production
+
+      - name: Deploy to Vercel (if secrets set)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "VERCEL_* secrets not set — skipping deploy. See VERCEL-GITHUB-ACTIONS.md"
+            exit 0
+          fi
+          npx --yes vercel@latest deploy --prod --yes --token="$VERCEL_TOKEN"
